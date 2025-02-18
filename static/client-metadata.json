@@ -1,0 +1,14 @@
+{
+  "client_id": "https://huntersat.suibari.com/client-metadata.json" ,
+  "client_name": "HuntersAt" ,
+  "client_uri": "https://huntersat.suibari.com" ,
+  "logo_uri": "https://huntersat.suibari.com/ogp.png" ,
+  "policy_uri": "https://huntersat.suibari.com" ,
+  "redirect_uris": ["https://huntersat.suibari.com/api/callback"],
+  "scope": "atproto transition:generic",
+  "grant_types": ["authorization_code" , "refresh_token"],
+  "response_types": ["code"],
+  "token_endpoint_auth_method": "none",
+  "application_type": "web",
+  "dpop_bound_access_tokens": true
+}
