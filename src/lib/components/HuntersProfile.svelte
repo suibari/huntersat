@@ -1,4 +1,7 @@
 <script lang="ts">
+  import Rating from "./utils/Rating.svelte";
+    import TimeRangeSlider from "./utils/TimeRangeSlider.svelte";
+
   let hunterName = '';
   let hunterID = '';
   let favoriteMonster = '';
@@ -7,18 +10,24 @@
   let backgroundColor = '#ffffff';
   
   const weapons = [
-    '大剣', '太刀', '片手剣', '双剣', 'ハンマー', '狩猟笛', 'ランス', 'ガンランス', 'スラッシュアックス', 'チャージアックス', '操虫棍', 'ライトボウガン', 'ヘビィボウガン', '弓'
+    'gs', 'ls', 'sns', 'db', 'hammer', 'hh', 'lance', 'gl', 'sa', 'cb', 'ig', 'lbg', 'hbg', 'bow'
   ];
-  let selectedWeapons: Record<string, "none" | "得意" | "超得意"> = {};
-  weapons.forEach(weapon => selectedWeapons[weapon] = "none");
+  let selectedWeapons: Record<string, number> = {};
   
-  const platforms = ['PS5', 'Xbox', 'Steam'];
+  const platforms = ['ps', 'xbox', 'steam'];
   let selectedPlatforms: string[] = [];
   
   let playTimeRange = [8, 22];
 
-  function toggleWeapon(weapon: string, level: "得意" | "超得意") {
-    selectedWeapons[weapon] = selectedWeapons[weapon] === level ? "none" : level;
+  function toggleWeapon(weapon: string) {
+    if (weapon in selectedWeapons) {
+      // 削除（選択解除）
+      const { [weapon]: _, ...rest } = selectedWeapons;
+      selectedWeapons = rest;
+    } else {
+      // 追加（デフォルト値3）
+      selectedWeapons = { ...selectedWeapons, [weapon]: 3 };
+    }
   }
 </script>
 
@@ -33,26 +42,23 @@
     <input bind:value={hunterID} class="w-full p-2 border rounded-md mb-4" />
     
     <label class="block mb-2">得意武器</label>
-    <div class="grid grid-cols-4 gap-2">
+    <div class="grid grid-cols-2 gap-2">
       {#each weapons as weapon}
-        <div class="flex flex-col items-center">
-          <button 
-            class="w-16 h-16 border rounded-md flex items-center justify-center"
-            class:bg-blue-500={selectedWeapons[weapon] === "得意"}
-            class:bg-red-500={selectedWeapons[weapon] === "超得意"}
-            class:bg-gray-300={selectedWeapons[weapon] === "none"}
-            on:click={() => toggleWeapon(weapon, "得意")}
-          >
+        <div class="flex gap-2 items-center">
+          <!-- 武器の選択ボタン -->
+          <input type="checkbox" on:click={() => {toggleWeapon(weapon)}} />
             {weapon}
-          </button>
-          <button 
-            class="text-xs mt-1 px-2 py-1 border rounded-md"
-            class:bg-red-500={selectedWeapons[weapon] === "超得意"}
-            class:bg-gray-300={selectedWeapons[weapon] !== "超得意"}
-            on:click={() => toggleWeapon(weapon, "超得意")}
-          >
-            超得意
-          </button>
+    
+          <!-- 選択時のみスライダー表示 -->
+          {#if weapon in selectedWeapons}
+            <input 
+              type="range" 
+              min="0" max="3" step="0.5" 
+              bind:value={selectedWeapons[weapon]}
+              class="mt-2 w-16"
+            />
+            <p class="text-xs">得意度: {selectedWeapons[weapon]}</p>
+          {/if}
         </div>
       {/each}
     </div>
@@ -83,18 +89,31 @@
   </div>
   
   <!-- プロフィールカード -->
-  <div class="w-full lg:w-2/3 p-6 rounded-2xl shadow-lg" style="background-color: {backgroundColor};">
+  <div id="profcard" class="w-full lg:w-2/3 p-6 rounded-2xl shadow-lg" style="background-color: {backgroundColor};">
     <h1 class="text-3xl font-bold text-center mb-4">ハンタープロフィール</h1>
-    <p class="text-xl font-bold">{hunterName}</p>
-    <p class="text-md text-gray-600">ID: {hunterID}</p>
+    <div class="p-4 bg-white rounded-md shadow-sm">
+      <p class="text-xl font-bold">{hunterName}</p>
+      <p class="text-md text-gray-600">ID: {hunterID}</p>
+    </div>
     <p class="mt-2">得意武器:</p>
     <div class="grid grid-cols-4 gap-2 mt-2">
       {#each weapons as weapon}
-        <div class="w-16 h-16 border rounded-md flex items-center justify-center"
-          class:bg-gray-300={selectedWeapons[weapon] === "none"}
-          class:bg-blue-500={selectedWeapons[weapon] === "得意"}
-          class:bg-red-500={selectedWeapons[weapon] === "超得意"}>
-          {weapon}
+        <div class="relative w-16 h-16 border rounded-md flex items-center justify-center"
+          class:border-amber-500={selectedWeapons[weapon] !== undefined}
+          class:border-4={selectedWeapons[weapon] !== undefined}
+        >
+          <img src="/weapons/{weapon}.png" alt={weapon} />
+          {#if selectedWeapons[weapon] !== undefined}
+            <div class="absolute -bottom-2 w-full flex justify-center rounded-b-md">
+              <Rating
+                  total={3}
+                  rating={selectedWeapons[weapon]}
+                  size={25}
+                  gap={1}
+                  borderWidth={2}
+                />
+            </div>
+          {/if}
         </div>
       {/each}
     </div>
@@ -103,15 +122,24 @@
     <div class="grid grid-cols-4 gap-2 mt-2">
       {#each platforms as platform}
         <div class="w-16 h-16 border rounded-md flex items-center justify-center"
-          class:bg-gray-300={!selectedPlatforms.includes(platform) || selectedPlatforms.length === 0}
-          class:bg-blue-500={selectedPlatforms.includes(platform)}
+          class:border-amber-500={selectedPlatforms.includes(platform)}
+          class:border-4={selectedPlatforms.includes(platform)}
         >
-          {platform}
+          <img src="/platforms/{platform}.png" alt={platform} class="w-14" />
         </div>
       {/each}
     </div>
-    <p>プレイ時間帯: {playTimeRange[0]}時 〜 {playTimeRange[1]}時</p>
-    <p>好きなモンスター: {favoriteMonster}</p>
-    <p class="mt-4">{comment}</p>
+    <p class="mt-2">プレイ時間帯:</p>
+    <div class="flex flex-col items-center mt-2">
+      <TimeRangeSlider start={playTimeRange[0]} end={playTimeRange[1]} />
+    </div>
+    <p class="mt-2">好きなモンスター:</p>
+    <div class="p-4 bg-white rounded-md shadow-sm">
+      <p>{favoriteMonster}</p>
+    </div>
+    <p class="mt-4">コメント:</p>
+    <div class="p-4 bg-white rounded-md shadow-sm">
+      <p>{comment}</p>
+    </div>
   </div>
 </div>
