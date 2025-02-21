@@ -71,7 +71,7 @@
     <Text
       x={20}
       y={360}
-      text="Hutner-ID: {hunterName}"
+      text="Hunter-ID: {hunterName}"
       fontSize={25}
       fill='white'
     />
