@@ -50,9 +50,9 @@
   </Layer>
 
   <!-- ヘッダー -->
-  <!-- <Layer>
+  <Layer>
     <Image image={header} />
-  </Layer> -->
+  </Layer>
 
   <!-- カードレイアウト -->
   <Layer>
