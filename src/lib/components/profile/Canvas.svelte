@@ -1,20 +1,21 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { weapons } from '$lib/consts';
   import { onMount } from "svelte";
-  import { Stage, Layer, Rect, Text, Image } from 'svelte-konva';
+  import { Stage, Layer, Rect, Text, Image, Star, Line } from 'svelte-konva';
 
   export let hunterName = "";
   export let hunterRank = "-";
   export let selectedPlatforms: string[] = [];
   export let selectedWeapons: Record<string, number> = {};
-  export let playTimeRange = [8, 22];
+  export let playTimeRange = [18, 23];
   export let comment = "";
   export let headerImage: string;
 
   let background: HTMLImageElement;
   let header: HTMLImageElement;
 
-  const weapons = ["gs", "ls", "sns", "db", "hammer", "hh", "lance", "gl", "sa", "cb", "ig", "lbg", "hbg", "bow"];
+  const configLine = [48 + (32 * playTimeRange[0]), 764, 50 + (33.5 * playTimeRange[1]), 764];
 
   onMount(() => {
     const bg = document.createElement('img');
@@ -33,6 +34,17 @@
       }
     }
   }
+
+  const configRect = (x_base: number, x_offset: number, y_base:number, y_offset: number) => {
+    return {
+      x: x_base + x_offset,
+      y: y_base + y_offset,
+      width: 60,
+      height: 60,
+      stroke: "red",
+      strokeWidth: 8,
+    }
+  }
 </script>
 
 <Stage
@@ -45,8 +57,7 @@
       width={900}
       height={1200}
       fill="pink",
-    >
-    </Rect>
+    />
   </Layer>
 
   <!-- ヘッダー -->
@@ -83,10 +94,62 @@
       fill='black'
       align='center'
     />
+    <Text
+      x={40}
+      y={860}
+      lineHeight={1.5}
+      width={820}
+      text={comment}
+      fontSize={16}
+      fill='black'
+    />
   </Layer>
 
-  <!-- アイコン系 -->
   <Layer>
-    
+    <!-- プラットフォームアイコン -->
+    {#if selectedPlatforms.includes("ps")}
+      <Rect
+        {...configRect(55, 0, 578, 0)}
+      />
+    {/if}
+    {#if selectedPlatforms.includes("xbox")}
+      <Rect
+        {...configRect(55, 88, 578, 0)}
+      />
+    {/if}
+    {#if selectedPlatforms.includes("steam")}
+      <Rect
+        {...configRect(55, 88 * 2, 578, 0)}
+      />
+    {/if}
+
+    <!-- 武器アイコン -->
+    {#each weapons as weapon, i}
+      {#if selectedWeapons[weapon]}
+        <Rect
+          {...configRect(368, 71 * (i % 7), 486, (i < 7 ? 0 : 78))}
+        />
+        {#if selectedWeapons[weapon] > 1}
+          <Star
+            x={380 + 71 * (i % 7)}
+            y={495 + (i < 7 ? 0 : 78)}
+            innerRadius={6}
+            outerRadius={12}
+            numPoints={5}
+            fill="gold"
+            stroke="black"
+            strokeWidth={1}
+          />
+        {/if}
+      {/if}
+    {/each}
+
+    <!-- プレイ時間 -->
+    <Line
+      points={configLine}
+      stroke="blue"
+      strokeWidth={10}
+      opacity={0.5}
+    />
   </Layer>
 </Stage>

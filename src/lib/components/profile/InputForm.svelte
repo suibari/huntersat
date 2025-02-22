@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { platforms, weapons } from "$lib/consts";
   import { createEventDispatcher } from "svelte";
 
   export let hunterName = "";
@@ -8,9 +9,6 @@
   export let playTimeRange = [8, 22];
   export let comment = "";
   export let headerImage: string | null = null;
-
-  const weapons = ["gs", "ls", "sns", "db", "hammer", "hh", "lance", "gl", "sa", "cb", "ig", "lbg", "hbg", "bow"];
-  const platforms = ["PS5", "Xbox", "Steam"];
 
   const dispatch = createEventDispatcher();
 
