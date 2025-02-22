@@ -41,7 +41,6 @@
 
   // 色を更新する関数
   async function updateColor(color: string) {
-    console.log(color)
     await tick(); // Svelteの状態更新後に処理
     if (rectRef?.handle) {
       rectRef.handle.fill(color);
