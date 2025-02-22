@@ -9,6 +9,7 @@
   export let playTimeRange = [8, 22];
   export let comment = "";
   export let headerImage: string | null = null;
+  export let backgroundColor = getRandomColor();
 
   const dispatch = createEventDispatcher();
 
@@ -34,7 +35,8 @@
       selectedWeapons,
       playTimeRange,
       comment,
-      headerImage
+      headerImage,
+      backgroundColor,
     });
   }
 
@@ -67,9 +69,17 @@
     headerImage = canvas.toDataURL("image/png");
     update();
   }
+
+  export function getRandomColor() {
+    // ランダムなパステルカラーを生成
+    const r = Math.floor(Math.random() * 128 + 128);
+    const g = Math.floor(Math.random() * 128 + 128);
+    const b = Math.floor(Math.random() * 128 + 128);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
 </script>
 
-<div class="mt-4 p-4 bg-gray-100 rounded-lg w-96">
+<div class="bg-gray-100 rounded-lg w-[400px]">
   <p class="font-semibold">ハンターネーム:</p>
   <input bind:value={hunterName} on:input={update} class="border w-full p-1" />
 
@@ -88,12 +98,12 @@
   {/each}
 
   <p class="font-semibold mt-2">得意武器:</p>
-  <div class="grid grid-rows-2">
+  <div>
     {#each weapons as weapon}
-      <div class="flex items-center">
-        {weaponsName[weapon]}
+      <div class="flex items-center gap-2">
+        <span class="w-32">{weaponsName[weapon]}</span>
         <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 1)} /> 得意
-        <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 2)} /> 超得意
+        <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 2)} /> お気に入り
       </div>
     {/each}
   </div>
@@ -114,5 +124,8 @@
   </div>
 
   <p class="font-semibold mt-2">コメント:</p>
-  <textarea bind:value={comment} on:input={update} class="border w-full p-1 mb-2"></textarea>
+  <textarea bind:value={comment} on:input={update} class="h-[100px] border w-full p-1 mb-2"></textarea>
+  
+  <p class="font-semibold mt-2">背景色:</p>
+  <input type="color" bind:value={backgroundColor} on:input={update} class="border w-full p-1" />
 </div>

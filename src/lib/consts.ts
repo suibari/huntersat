@@ -18,7 +18,7 @@ export const weaponsName: Record<string, string> = {
 
 export const platforms = ["ps", "xbox", "steam"];
 export const platformsName: Record<string, string> = {
-  "ps": "プレイステーション5",
+  "ps": "PlayStation5",
   "xbox": "Xbox Series X|S",
   "steam": "Steam"
 };

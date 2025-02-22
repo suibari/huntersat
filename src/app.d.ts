@@ -7,6 +7,17 @@ declare global {
 		// interface PageData {}
 		// interface PageState {}
 		// interface Platform {}
+
+		type ProfileUpdateEvent = CustomEvent<{
+			hunterName: "";
+			hunterRank: "-";
+			selectedPlatforms: [];
+			selectedWeapons: {};
+			playTimeRange: [8, 22];
+			comment: "";
+			headerImage: string;
+			backgroundColor: string;
+		}>;
 	}
 }
 

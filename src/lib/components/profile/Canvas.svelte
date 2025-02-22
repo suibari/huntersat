@@ -1,8 +1,10 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { weapons } from '$lib/consts';
-  import { onMount } from "svelte";
+  import Konva from 'konva';
+  import { onMount, tick } from "svelte";
   import { Stage, Layer, Rect, Text, Image, Star, Line } from 'svelte-konva';
+  import type { Layer as KonvaLayer } from 'konva/lib/Layer';
 
   export let hunterName = "";
   export let hunterRank = "-";
@@ -11,9 +13,11 @@
   export let playTimeRange = [18, 23];
   export let comment = "";
   export let headerImage: string;
+  export let backgroundColor: string;
 
   let background: HTMLImageElement;
   let header: HTMLImageElement;
+  let rectRef: any;
 
   const configLine = [48 + (32 * playTimeRange[0]), 764, 50 + (33.5 * playTimeRange[1]), 764];
 
@@ -26,7 +30,7 @@
   });
 
   $: {
-    if (window && headerImage) {
+    if (window && headerImage && backgroundColor) {
       const hd = document.createElement('img');
       hd.src = headerImage;
       hd.onload = () => {
@@ -34,6 +38,19 @@
       }
     }
   }
+
+  // 色を更新する関数
+  async function updateColor(color: string) {
+    console.log(color)
+    await tick(); // Svelteの状態更新後に処理
+    if (rectRef?.handle) {
+      rectRef.handle.fill(color);
+      rectRef.handle.getLayer()?.batchDraw(); // 変更を描画
+    }
+  }
+
+  // colorが変わったら反映
+  $: updateColor(backgroundColor);
 
   const configRect = (x_base: number, x_offset: number, y_base:number, y_offset: number) => {
     return {
@@ -54,9 +71,10 @@
   <!-- 背景色 -->
   <Layer>
     <Rect 
+      bind:this={rectRef}
       width={900}
       height={1200}
-      fill="pink",
+      fill={backgroundColor},
     />
   </Layer>
 

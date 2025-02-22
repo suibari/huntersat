@@ -10,20 +10,10 @@
     playTimeRange: [8, 22],
     comment: "",
     headerImage: "",
+    backgroundColor: "",
   };
 
-  // 型を定義
-  type ProfileUpdateEvent = CustomEvent<{
-    hunterName: "";
-    hunterRank: "-";
-    selectedPlatforms: [];
-    selectedWeapons: {};
-    playTimeRange: [8, 22];
-    comment: "";
-    headerImage: string;
-  }>;
-
-  function handleProfileUpdate(event: ProfileUpdateEvent) {
+  function handleProfileUpdate(event: App.ProfileUpdateEvent) {
     profileData = { ...event.detail };
   }
 </script>
