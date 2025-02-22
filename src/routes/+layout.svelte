@@ -4,7 +4,11 @@
   import { oauthManager } from "$lib/oauth";
   import Spinner from '$lib/components/Spinner.svelte';
   import { myDid, isLoading } from '$lib/stores';
+  import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
+  import Login from '$lib/components/modal/Login.svelte';
   
+  let loginModal = $state(false);
+  let aboutModal = $state(false);
   let isLoggingOut = $state(false);
   
   setContext("did", myDid);
@@ -38,9 +42,22 @@
   }
 </script>
 
+<Navbar class="bg-white text-black">
+  <NavBrand href="/">
+    <span class="text-xl font-semibold">HuntersAt</span>
+  </NavBrand>
+  <NavHamburger />
+  <NavUl>
+    <NavLi class="cursor-pointer" on:click={() => loginModal = true}>Log-in</NavLi>
+    <NavLi class="cursor-pointer" on:click={() => aboutModal = true}>About</NavLi>
+  </NavUl>
+</Navbar>
+
 <div class="p-2">
   {@render children()}
 </div>
+
+<Login {loginModal} />
 
 {#if isLoggingOut}
   <Spinner text="Logging-out..."/>

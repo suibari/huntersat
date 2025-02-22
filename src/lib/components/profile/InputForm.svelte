@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { platforms, weapons } from "$lib/consts";
+  import { platforms, platformsName, weapons, weaponsName } from "$lib/consts";
   import { createEventDispatcher } from "svelte";
 
   export let hunterName = "";
@@ -70,35 +70,35 @@
 </script>
 
 <div class="mt-4 p-4 bg-gray-100 rounded-lg w-96">
-  <label>ヘッダー画像:</label>
-  <input type="file" accept="image/*" on:change={handleFile} class="mb-2" />
-  {#if headerImage}
-    <img src={headerImage} alt="ヘッダー画像" class="w-full h-auto rounded-lg mb-2" />
-  {/if}
+  <p class="font-semibold">ハンターネーム:</p>
+  <input bind:value={hunterName} on:input={update} class="border w-full p-1" />
 
-  <label>ハンターネーム:</label>
-  <input bind:value={hunterName} on:input={update} class="border w-full p-1 mb-2" />
+  <p class="font-semibold mt-2">ハンターランク:</p>
+  <input type="number" bind:value={hunterRank} on:input={update} class="border w-full p-1" />
 
-  <label>HR:</label>
-  <input type="number" bind:value={hunterRank} on:input={update} class="border w-full p-1 mb-2" />
+  <p class="font-semibold mt-2">ヘッダー画像:</p>
+  <input type="file" accept="image/*" on:change={handleFile} class="border-1" />
 
-  <label>プラットフォーム:</label>
+  <p class="font-semibold mt-2">プラットフォーム:</p>
   {#each platforms as platform}
     <label class="flex items-center">
       <input type="checkbox" on:change={() => togglePlatform(platform)} />
-      {platform}
+      {platformsName[platform]}
     </label>
   {/each}
 
-  <label>得意武器:</label>
-  {#each weapons as weapon}
-    <div class="flex items-center">
-      <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 1)} /> 得意
-      <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 2)} /> 超得意
-    </div>
-  {/each}
+  <p class="font-semibold mt-2">得意武器:</p>
+  <div class="grid grid-rows-2">
+    {#each weapons as weapon}
+      <div class="flex items-center">
+        {weaponsName[weapon]}
+        <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 1)} /> 得意
+        <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 2)} /> 超得意
+      </div>
+    {/each}
+  </div>
 
-  <label>プレイ時間帯:</label>
+  <p class="font-semibold mt-2">プレイ時間帯:</p>
   <div class="flex">
     <select bind:value={playTimeRange[0]} on:change={update}>
       {#each Array(24) as _, i}
@@ -113,6 +113,6 @@
     </select>
   </div>
 
-  <label>コメント:</label>
+  <p class="font-semibold mt-2">コメント:</p>
   <textarea bind:value={comment} on:input={update} class="border w-full p-1 mb-2"></textarea>
 </div>
