@@ -18,6 +18,9 @@
   let background: HTMLImageElement;
   let header: HTMLImageElement;
   let rectRef: any;
+  let canvasWidth = 900;
+  let canvasHeight = 1200;
+  let canvasScale = 1;
 
   const configLine = [48 + (32 * playTimeRange[0]), 764, 50 + (33.5 * playTimeRange[1]), 764];
 
@@ -27,6 +30,9 @@
     bg.onload = () => {
       background = bg;
     }
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
   });
 
   $: {
@@ -39,7 +45,10 @@
     }
   }
 
-  // 色を更新する関数
+  /**
+   * 背景色変更
+   * @param color
+   */
   async function updateColor(color: string) {
     await tick(); // Svelteの状態更新後に処理
     if (rectRef?.handle) {
@@ -50,6 +59,19 @@
 
   // colorが変わったら反映
   $: updateColor(backgroundColor);
+
+  /**
+   * Scale変更
+   */
+  function updateScale() {
+    const container = document.getElementById("containter");
+    if (container) {
+      const parentWidth = Math.min(container.clientWidth, 900); // 最大900px
+      canvasScale = parentWidth / 900;
+      canvasWidth = parentWidth;
+      canvasHeight = 1200 * canvasScale; // 縦も縮小
+    }
+  }
 
   const configRect = (x_base: number, x_offset: number, y_base:number, y_offset: number) => {
     return {
@@ -63,110 +85,116 @@
   }
 </script>
 
-<Stage
-  width={900}
-  height={1200}
+<div
+  id="containter"
+  class="w-full md:w-max origin-top-left"
+  style="transform: scale({canvasScale}); height: {canvasHeight}px;"
 >
-  <!-- 背景色 -->
-  <Layer>
-    <Rect 
-      bind:this={rectRef}
-      width={900}
-      height={1200}
-      fill={backgroundColor},
-    />
-  </Layer>
-
-  <!-- ヘッダー -->
-  <Layer>
-    <Image image={header} />
-  </Layer>
-
-  <!-- カードレイアウト -->
-  <Layer>
-    <Image image={background} />
-  </Layer>
-
-  <!-- 文字入れ -->
-  <Layer>
-    <Text
-      x={20}
-      y={300}
-      text={hunterName}
-      fontSize={50}
-      fill='white'
-    />
-    <Text
-      x={20}
-      y={360}
-      text="Hunter-ID: {hunterName}"
-      fontSize={25}
-      fill='white'
-    />
-    <Text
-      x={170}
-      y={460}
-      text={hunterRank}
-      fontSize={40}
-      fill='black'
-      align='center'
-    />
-    <Text
-      x={40}
-      y={860}
-      lineHeight={1.5}
-      width={820}
-      text={comment}
-      fontSize={16}
-      fill='black'
-    />
-  </Layer>
-
-  <Layer>
-    <!-- プラットフォームアイコン -->
-    {#if selectedPlatforms.includes("ps")}
-      <Rect
-        {...configRect(55, 0, 578, 0)}
+  <Stage
+    width={900}
+    height={1200}
+  >
+    <!-- 背景色 -->
+    <Layer>
+      <Rect 
+        bind:this={rectRef}
+        width={900}
+        height={1200}
+        fill={backgroundColor},
       />
-    {/if}
-    {#if selectedPlatforms.includes("xbox")}
-      <Rect
-        {...configRect(55, 88, 578, 0)}
-      />
-    {/if}
-    {#if selectedPlatforms.includes("steam")}
-      <Rect
-        {...configRect(55, 88 * 2, 578, 0)}
-      />
-    {/if}
+    </Layer>
 
-    <!-- 武器アイコン -->
-    {#each weapons as weapon, i}
-      {#if selectedWeapons[weapon]}
+    <!-- ヘッダー -->
+    <Layer>
+      <Image image={header} />
+    </Layer>
+
+    <!-- カードレイアウト -->
+    <Layer>
+      <Image image={background} />
+    </Layer>
+
+    <!-- 文字入れ -->
+    <Layer>
+      <Text
+        x={20}
+        y={300}
+        text={hunterName}
+        fontSize={50}
+        fill='white'
+      />
+      <Text
+        x={20}
+        y={360}
+        text="Hunter-ID: {hunterName}"
+        fontSize={25}
+        fill='white'
+      />
+      <Text
+        x={170}
+        y={460}
+        text={hunterRank}
+        fontSize={40}
+        fill='black'
+        align='center'
+      />
+      <Text
+        x={40}
+        y={860}
+        lineHeight={1.5}
+        width={820}
+        text={comment}
+        fontSize={16}
+        fill='black'
+      />
+    </Layer>
+
+    <Layer>
+      <!-- プラットフォームアイコン -->
+      {#if selectedPlatforms.includes("ps")}
         <Rect
-          {...configRect(368, 71 * (i % 7), 486, (i < 7 ? 0 : 78))}
+          {...configRect(55, 0, 578, 0)}
         />
-        {#if selectedWeapons[weapon] > 1}
-          <Star
-            x={380 + 71 * (i % 7)}
-            y={495 + (i < 7 ? 0 : 78)}
-            innerRadius={6}
-            outerRadius={12}
-            numPoints={5}
-            fill="gold"
-            stroke="black"
-            strokeWidth={1}
-          />
-        {/if}
       {/if}
-    {/each}
+      {#if selectedPlatforms.includes("xbox")}
+        <Rect
+          {...configRect(55, 88, 578, 0)}
+        />
+      {/if}
+      {#if selectedPlatforms.includes("steam")}
+        <Rect
+          {...configRect(55, 88 * 2, 578, 0)}
+        />
+      {/if}
 
-    <!-- プレイ時間 -->
-    <Line
-      points={configLine}
-      stroke="blue"
-      strokeWidth={10}
-      opacity={0.5}
-    />
-  </Layer>
-</Stage>
+      <!-- 武器アイコン -->
+      {#each weapons as weapon, i}
+        {#if selectedWeapons[weapon]}
+          <Rect
+            {...configRect(368, 71 * (i % 7), 486, (i < 7 ? 0 : 78))}
+          />
+          {#if selectedWeapons[weapon] > 1}
+            <Star
+              x={380 + 71 * (i % 7)}
+              y={495 + (i < 7 ? 0 : 78)}
+              innerRadius={6}
+              outerRadius={12}
+              numPoints={5}
+              fill="gold"
+              stroke="black"
+              strokeWidth={1}
+            />
+          {/if}
+        {/if}
+      {/each}
+
+      <!-- プレイ時間 -->
+      <Line
+        points={configLine}
+        stroke="blue"
+        strokeWidth={10}
+        opacity={0.5}
+      />
+    </Layer>
+  </Stage>
+</div>

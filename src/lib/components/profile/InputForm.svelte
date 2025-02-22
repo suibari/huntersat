@@ -79,7 +79,7 @@
   }
 </script>
 
-<div class="bg-gray-100 rounded-lg w-[400px]">
+<div class="m-2 p-4 bg-gray-100 rounded-lg">
   <p class="font-semibold">ハンターネーム:</p>
   <input bind:value={hunterName} on:input={update} class="border w-full p-1" />
 
@@ -124,7 +124,7 @@
   </div>
 
   <p class="font-semibold mt-2">コメント:</p>
-  <textarea bind:value={comment} on:input={update} class="h-[100px] border w-full p-1 mb-2"></textarea>
+  <textarea bind:value={comment} on:input={update} class="h-[100px] border w-full p-1"></textarea>
   
   <p class="font-semibold mt-2">背景色:</p>
   <input type="color" bind:value={backgroundColor} on:input={update} class="border w-full p-1" />

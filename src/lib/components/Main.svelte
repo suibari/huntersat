@@ -18,5 +18,10 @@
   }
 </script>
 
-<InputForm on:updateProfile={handleProfileUpdate} />
-<Canvas {...profileData} />
+<div class="flex flex-col md:flex-row items-center justify-center">
+  <InputForm on:updateProfile={handleProfileUpdate} />
+  <Canvas {...profileData} />
+</div>
+<div class="flex items-center justify-center">
+  <button class="mt-4 p-2 bg-blue-500 text-white rounded">Save & Post</button>
+</div>

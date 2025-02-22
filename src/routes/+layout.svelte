@@ -42,7 +42,7 @@
   }
 </script>
 
-<Navbar class="bg-white text-black">
+<Navbar>
   <NavBrand href="/">
     <span class="text-xl font-semibold">HuntersAt</span>
   </NavBrand>
