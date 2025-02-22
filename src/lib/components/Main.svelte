@@ -2,8 +2,9 @@
   import InputForm from "./profile/InputForm.svelte";
   import Canvas from "./profile/Canvas.svelte";
 
-  let profileData = {
+  let profileData: App.ProfileData = {
     hunterName: "",
+    hunterID: "",
     hunterRank: "-",
     selectedPlatforms: [],
     selectedWeapons: {},
@@ -13,7 +14,7 @@
     backgroundColor: "",
   };
 
-  function handleProfileUpdate(event: App.ProfileUpdateEvent) {
+  function handleProfileUpdate(event: CustomEvent<App.ProfileData>) {
     profileData = { ...event.detail };
   }
 </script>

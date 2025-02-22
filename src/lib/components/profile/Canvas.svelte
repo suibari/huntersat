@@ -1,12 +1,11 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { weapons } from '$lib/consts';
-  import Konva from 'konva';
   import { onMount, tick } from "svelte";
   import { Stage, Layer, Rect, Text, Image, Star, Line } from 'svelte-konva';
-  import type { Layer as KonvaLayer } from 'konva/lib/Layer';
 
   export let hunterName = "";
+  export let hunterID = "";
   export let hunterRank = "-";
   export let selectedPlatforms: string[] = [];
   export let selectedWeapons: Record<string, number> = {};
@@ -126,7 +125,7 @@
       <Text
         x={20}
         y={360}
-        text="Hunter-ID: {hunterName}"
+        text="Hunter-ID: {hunterID}"
         fontSize={25}
         fill='white'
       />

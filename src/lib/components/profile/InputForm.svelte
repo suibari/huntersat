@@ -1,17 +1,24 @@
 <script lang="ts">
   import { platforms, platformsName, weapons, weaponsName } from "$lib/consts";
-  import { createEventDispatcher } from "svelte";
+    import { AppBskyActorDefs } from "@atproto/api";
+  import { createEventDispatcher, onMount } from "svelte";
 
   export let hunterName = "";
+  export let hunterID = "";
   export let hunterRank = "-";
   export let selectedPlatforms: string[] = [];
   export let selectedWeapons: Record<string, number> = {};
   export let playTimeRange = [8, 22];
   export let comment = "";
   export let headerImage: string | null = null;
-  export let backgroundColor = getRandomColor();
+  export let backgroundColor: string = "";
 
   const dispatch = createEventDispatcher();
+
+  onMount(() => {
+    backgroundColor = getRandomColor();
+    update();
+  })
 
   function toggleWeapon(weapon: string, level: number) {
     selectedWeapons = { ...selectedWeapons, [weapon]: selectedWeapons[weapon] === level ? 0 : level };
@@ -30,6 +37,7 @@
   function update() {
     dispatch("updateProfile", {
       hunterName,
+      hunterID,
       hunterRank,
       selectedPlatforms,
       selectedWeapons,
@@ -70,7 +78,7 @@
     update();
   }
 
-  export function getRandomColor() {
+  function getRandomColor() {
     // ランダムなパステルカラーを生成
     const r = Math.floor(Math.random() * 128 + 128);
     const g = Math.floor(Math.random() * 128 + 128);
@@ -81,7 +89,10 @@
 
 <div class="m-2 p-4 bg-gray-100 rounded-lg">
   <p class="font-semibold">ハンターネーム:</p>
-  <input bind:value={hunterName} on:input={update} class="border w-full p-1" />
+  <input bind:value={hunterName} on:input={update} class="border w-full p-1 bg-white" />
+
+  <p class="font-semibold">ハンターID:</p>
+  <input bind:value={hunterID} on:input={update} class="border w-full p-1 bg-white" />
 
   <p class="font-semibold mt-2">ハンターランク:</p>
   <input type="number" bind:value={hunterRank} on:input={update} class="border w-full p-1" />
@@ -91,7 +102,7 @@
 
   <p class="font-semibold mt-2">プラットフォーム:</p>
   {#each platforms as platform}
-    <label class="flex items-center">
+    <label class="flex items-center gap-1">
       <input type="checkbox" on:change={() => togglePlatform(platform)} />
       {platformsName[platform]}
     </label>
@@ -100,8 +111,9 @@
   <p class="font-semibold mt-2">得意武器:</p>
   <div>
     {#each weapons as weapon}
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1">
         <span class="w-32">{weaponsName[weapon]}</span>
+        <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 0)} /> なし
         <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 1)} /> 得意
         <input type="radio" name={weapon} on:change={() => toggleWeapon(weapon, 2)} /> お気に入り
       </div>
