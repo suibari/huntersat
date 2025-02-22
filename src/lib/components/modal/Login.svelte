@@ -4,7 +4,7 @@
 
   export let loginModal = false;
 
-  let provider = '';
+  let provider = 'https://bsky.social';
   let handle = '';
 
   async function handleLogin() {
@@ -14,14 +14,15 @@
   }
 </script>
 
-<Modal bind:open={loginModal} autoclose outsideclose>
-  <h1 class="text-xl font-bold text-center mb-4">Login</h1>
+<Modal title="Login" bind:open={loginModal} autoclose outsideclose>
+  <h1 class="font-bold mb-2">Hosting Provider</h1>
   <input 
     type="text" 
     bind:value={provider} 
     placeholder="Hosting Provider" 
     class="w-full px-4 py-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
   />
+  <h1 class="font-bold mb-2">User Handle</h1>
   <input 
     type="text" 
     bind:value={handle} 

@@ -57,7 +57,7 @@
   {@render children()}
 </div>
 
-<Login {loginModal} />
+<Login bind:loginModal={loginModal} />
 
 {#if isLoggingOut}
   <Spinner text="Logging-out..."/>

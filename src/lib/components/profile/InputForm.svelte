@@ -91,7 +91,7 @@
   <p class="font-semibold">ハンターネーム:</p>
   <input bind:value={hunterName} on:input={update} class="border w-full p-1 bg-white" />
 
-  <p class="font-semibold">ハンターID:</p>
+  <p class="font-semibold mt-2">ハンターID:</p>
   <input bind:value={hunterID} on:input={update} class="border w-full p-1 bg-white" />
 
   <p class="font-semibold mt-2">ハンターランク:</p>
