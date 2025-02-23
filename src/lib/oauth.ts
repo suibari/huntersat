@@ -3,7 +3,6 @@ import { browser } from '$app/environment';
 import { BrowserOAuthClient, OAuthSession } from '@atproto/oauth-client-browser';
 import { openDB } from 'idb';
 import { Agent } from '@atproto/api';
-import { REVIEWOPEN } from '@atproto/api/dist/client/types/tools/ozone/moderation/defs';
 
 const url = PUBLIC_URL || `http://127.0.0.1:5173`;
 const enc = encodeURIComponent;
@@ -60,8 +59,11 @@ class OAuthManager {
   async login(provider: string, handle: string): Promise<void> {
     if (!browser) return;
 
+    const pbd = provider || "https://bsky.social";
+
     try {
-      await this.init(provider);
+      localStorage.setItem('provider', pbd);
+      await this.init(pbd);
       if (this.client) {
         const authUrl = await this.client.signIn(handle, { prompt: 'login', ui_locales: 'ja-JP' });
         window.location.href = authUrl;

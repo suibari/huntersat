@@ -32,7 +32,7 @@
       // ログイン済みなら、User Repoからデータ取得
       const agent = oauthManager.currentAgent!;
       const {data} = await agent.com.atproto.repo.getRecord({
-        collection: provider!,
+        collection: "blue.huntersat.profile",
         repo: $myDid,
         rkey: 'self',
       });
