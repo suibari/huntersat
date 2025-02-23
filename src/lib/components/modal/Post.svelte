@@ -1,29 +1,22 @@
 <script lang="ts">
   import { oauthManager } from "$lib/oauth";
   import { myDid } from "$lib/stores";
-  import { uint8ArrayToDataURL } from "$lib/util";
+  import { blobToDataURL } from "$lib/util";
   import { RichText } from "@atproto/api";
   import { BlobRef } from '@atproto/lexicon'
   import { Modal } from "flowbite-svelte";
   import { onMount } from "svelte";
 
   export let postModal = false;
+  export let imageBlob: Blob;
   export let blobRef: BlobRef;
+
+  let textPost = "私のハンターズプロフィールだよ。一狩り行こうぜ! #MHWs\nhttps://huntersat.suibari.com/";
 
   let dataURL: string;
 
   onMount(async () => {
-    const agent = oauthManager.currentAgent!;
-
-    const response = await agent.com.atproto.sync.getBlob({
-      did: $myDid!,
-      cid: blobRef.ref,
-    },{
-      
-    });
-    if (response?.success) {
-      dataURL = await uint8ArrayToDataURL(response.data);
-    }
+    dataURL = await blobToDataURL(imageBlob);
   })
 
   async function handlePost() {
@@ -31,8 +24,9 @@
 
     // post
     if (blobRef) {
-      const text = "私のハンターズプロフィールだよ。一狩り行こうぜ! #MHWs\nhttps://huntersat.suibari.com/";
+      const text = textPost;
       const richText = new RichText({text});
+      await richText.detectFacets(agent);
       await agent.post({
         text: richText.text,
         facets: richText.facets,
@@ -58,10 +52,13 @@
 </script>
 
 <Modal title="Post" bind:open={postModal} autoclose outsideclose>
-  <img src={dataURL} alt="Hunters Profile Preview" />
-  <button 
-    onclick={handlePost} 
-    class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
-    Post
-  </button>
+  <div class="flex flex-col items-center gap-2">
+    <img src={dataURL} alt="Hunters Profile Preview" />
+    <textarea class="w-full" bind:value={textPost}></textarea>
+    <button 
+      onclick={handlePost}
+      class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
+      Post
+    </button>
+  </div>
 </Modal>

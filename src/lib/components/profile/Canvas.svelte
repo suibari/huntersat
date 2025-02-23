@@ -90,7 +90,7 @@
     if (stageRef) {
       const dataUrl = await stageRef.handle().toBlob({
         mimeType: "image/png",
-        pixelRatio: 0.5
+        pixelRatio: 0.8
       });
       return dataUrl as Blob;
     }

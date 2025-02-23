@@ -6,10 +6,11 @@
   import { oauthManager } from "$lib/oauth";
   import Spinner from "./Spinner.svelte";
   import Post from "./modal/Post.svelte";
-  import { BlobRef } from '@atproto/lexicon'
+  import type { BlobRef } from "@atproto/api";
 
   let exportImage: (() => Promise<Blob | undefined>);
   let isSaving = false;
+  let imageBlob: Blob|undefined;
   let blobRef: BlobRef;
   let postModal = false;
 
@@ -47,10 +48,12 @@
       console.log(`[INFO] successful putRecord`);
 
       // CanvasをuploadBlob
-      const blob = await exportImage();
-      const response = await agent?.com.atproto.repo.uploadBlob(blob);
-      if (response?.success && response.data.blob) {
-        blobRef = response?.data.blob;
+      imageBlob = await exportImage();
+      if (imageBlob) {
+        const response = await agent?.com.atproto.repo.uploadBlob(imageBlob);
+        if (response?.success && response.data.blob) {
+          blobRef = response?.data.blob;
+        }
       }
 
       postModal = true;
@@ -93,8 +96,8 @@
   {/if}
 </div>
 
-{#if postModal && blobRef}
-  <Post {postModal} {blobRef} />    
+{#if postModal && imageBlob && blobRef}
+  <Post bind:postModal={postModal} {imageBlob} {blobRef} />    
 {/if}
 
 {#if isSaving}
