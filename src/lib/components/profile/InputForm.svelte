@@ -1,22 +1,23 @@
 <script lang="ts">
   import { platforms, platformsName, weapons, weaponsName } from "$lib/consts";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { profileData } from "$lib/stores";
+  import { onMount } from "svelte";
 
-  export let hunterName = "";
-  export let hunterID = "";
-  export let hunterRank = "-";
-  export let selectedPlatforms: string[] = [];
-  export let selectedWeapons: Record<string, number> = {};
-  export let playTimeRange = [8, 22];
-  export let comment = "";
-  export let headerImage: string | null = null;
-  export let backgroundColor: string = "";
-
-  const dispatch = createEventDispatcher();
+  let hunterName = "";
+  let hunterID = "";
+  let hunterRank = "-";
+  let selectedPlatforms: string[] = [];
+  let selectedWeapons: Record<string, number> = {};
+  let playTimeRange = [8, 22];
+  let comment = "";
+  let headerImage: string | undefined = undefined;
+  let backgroundColor: string = "";
 
   onMount(() => {
-    backgroundColor = getRandomColor();
-    update();
+    if (!backgroundColor) {
+      backgroundColor = getRandomColor();
+      update();
+    }
   })
 
   function toggleWeapon(weapon: string, level: number) {
@@ -34,7 +35,7 @@
   }
 
   function update() {
-    dispatch("updateProfile", {
+    profileData.set({
       hunterName,
       hunterID,
       hunterRank,
@@ -87,6 +88,18 @@
     const toHex = (c: number) => c.toString(16).padStart(2, "0");
 
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  $: {
+    hunterName = $profileData.hunterName;
+    hunterID = $profileData.hunterID;
+    hunterRank = $profileData.hunterRank;
+    selectedPlatforms = [...$profileData.selectedPlatforms];
+    selectedWeapons = $profileData.selectedWeapons;
+    playTimeRange = [...$profileData.playTimeRange];
+    comment = $profileData.comment;
+    headerImage = $profileData.headerImage ?? "";
+    backgroundColor = $profileData.backgroundColor;
   }
 </script>
 

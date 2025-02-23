@@ -6,7 +6,7 @@
   import { myDid, isLoading, profileData } from '$lib/stores';
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
   import Login from '$lib/components/modal/Login.svelte';
-    import { uint8ArrayToDataURL } from '$lib/util';
+  import { uint8ArrayToDataURL } from '$lib/util';
   
   let loginModal = $state(false);
   let isLoggingOut = $state(false);
@@ -73,9 +73,17 @@
   
   const handleLogout = async () => {
     isLoggingOut = true;
+
+    // レコード削除
+    const agent = oauthManager.currentAgent;
+    agent?.com.atproto.repo.deleteRecord({
+      collection: "blue.huntersat.profile",
+      repo: $myDid!,
+      rkey: "self",
+    });
     
     await oauthManager.logout($myDid!);
-    
+
     // UIを未ログイン状態に
     myDid.set(null);
     
@@ -90,7 +98,7 @@
   <NavHamburger />
   <NavUl class="">
     {#if $myDid}
-      <NavLi class="cursor-pointer text-accent" on:click={() => loginModal = true}>Log-out</NavLi>
+      <NavLi class="cursor-pointer text-accent" on:click={handleLogout}>Log-out</NavLi>
     {:else}
       <NavLi class="cursor-pointer text-accent" on:click={() => loginModal = true}>Log-in with Bluesky</NavLi>
     {/if}
@@ -103,6 +111,9 @@
 
 <Login bind:loginModal={loginModal} />
 
+{#if $isLoading}
+  <Spinner text="Loading Data..." />
+{/if}
 {#if isLoggingOut}
   <Spinner text="Logging-out..."/>
 {/if}

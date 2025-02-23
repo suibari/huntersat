@@ -1,18 +1,9 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { weapons } from '$lib/consts';
+  import { profileData } from '$lib/stores';
   import { onMount, tick } from "svelte";
   import { Stage, Layer, Rect, Text, Image, Star, Line } from 'svelte-konva';
-
-  export let hunterName = "";
-  export let hunterID = "";
-  export let hunterRank = "-";
-  export let selectedPlatforms: string[] = [];
-  export let selectedWeapons: Record<string, number> = {};
-  export let playTimeRange = [18, 23];
-  export let comment = "";
-  export let headerImage: string | undefined;
-  export let backgroundColor: string;
 
   let background: HTMLImageElement;
   let header: HTMLImageElement;
@@ -23,7 +14,7 @@
   let canvasHeight = 1200;
   let canvasScale = 1;
 
-  const configLine = [48 + (33.5 * playTimeRange[0]), 764, 50 + (33.5 * playTimeRange[1]), 764];
+  const configLine = [48 + (33.5 * $profileData.playTimeRange[0]), 764, 50 + (33.5 * $profileData.playTimeRange[1]), 764];
 
   onMount(() => {
     const bg = document.createElement('img');
@@ -35,13 +26,13 @@
     updateScale();
     window.addEventListener("resize", updateScale);
 
-    updateColor(backgroundColor);
+    updateColor($profileData.backgroundColor);
   });
 
   $: {
-    if (window && headerImage) {
+    if (window && $profileData.headerImage) {
       const hd = document.createElement('img');
-      hd.src = headerImage;
+      hd.src = $profileData.headerImage;
       hd.onload = () => {
         header = hd;
       }
@@ -61,7 +52,7 @@
   }
 
   // colorが変わったら反映
-  $: updateColor(backgroundColor);
+  $: updateColor($profileData.backgroundColor);
 
   /**
    * プレイ時間変更
@@ -77,7 +68,7 @@
     }
   }
 
-  $: updatePlaytime(playTimeRange);
+  $: updatePlaytime($profileData.playTimeRange);
 
   /**
    * Scale変更
@@ -138,7 +129,7 @@
         bind:this={rectRef}
         width={900}
         height={1200}
-        fill={backgroundColor},
+        fill={$profileData.backgroundColor},
       />
     </Layer>
 
@@ -157,21 +148,21 @@
       <Text
         x={20}
         y={300}
-        text={hunterName}
+        text={$profileData.hunterName}
         fontSize={50}
         fill='white'
       />
       <Text
         x={20}
         y={360}
-        text="Hunter-ID: {hunterID}"
+        text="Hunter-ID: {$profileData.hunterID}"
         fontSize={25}
         fill='white'
       />
       <Text
         x={170}
         y={460}
-        text={hunterRank}
+        text={$profileData.hunterRank}
         fontSize={40}
         fill='black'
         align='center'
@@ -181,7 +172,7 @@
         y={860}
         lineHeight={1.5}
         width={820}
-        text={comment}
+        text={$profileData.comment}
         fontSize={16}
         fill='black'
       />
@@ -196,17 +187,17 @@
 
     <Layer>
       <!-- プラットフォームアイコン -->
-      {#if selectedPlatforms.includes("ps")}
+      {#if $profileData.selectedPlatforms.includes("ps")}
         <Rect
           {...configRect(55, 0, 578, 0)}
         />
       {/if}
-      {#if selectedPlatforms.includes("xbox")}
+      {#if $profileData.selectedPlatforms.includes("xbox")}
         <Rect
           {...configRect(55, 88, 578, 0)}
         />
       {/if}
-      {#if selectedPlatforms.includes("steam")}
+      {#if $profileData.selectedPlatforms.includes("steam")}
         <Rect
           {...configRect(55, 88 * 2, 578, 0)}
         />
@@ -214,11 +205,11 @@
 
       <!-- 武器アイコン -->
       {#each weapons as weapon, i}
-        {#if selectedWeapons[weapon]}
+        {#if $profileData.selectedWeapons[weapon]}
           <Rect
             {...configRect(368, 71 * (i % 7), 486, (i < 7 ? 0 : 78))}
           />
-          {#if selectedWeapons[weapon] > 1}
+          {#if $profileData.selectedWeapons[weapon] > 1}
             <Star
               x={380 + 71 * (i % 7)}
               y={495 + (i < 7 ? 0 : 78)}

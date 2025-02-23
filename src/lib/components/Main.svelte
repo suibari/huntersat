@@ -4,15 +4,15 @@
   import { myDid, profileData } from "$lib/stores";
   import { handleWebShare } from "$lib/webshare";
   import { oauthManager } from "$lib/oauth";
+  import Spinner from "./Spinner.svelte";
 
   let exportImage: (() => Promise<Blob | undefined>);
-
-  function handleProfileUpdate(event: CustomEvent<App.ProfileData>) {
-    profileData.set({ ...event.detail });
-  }
+  let isSaving = false;
 
   async function handleSaveAndPost() {
     let record: App.Record;
+
+    isSaving = true;
 
     const agent = oauthManager.currentAgent;
 
@@ -43,10 +43,14 @@
       console.log(`[INFO] successful putRecord`);
     } catch (error) {
       console.error(`[ERROR] uploadBlob or putRecord error: ${error}`);
+    } finally {
+      isSaving = false;
     }
   }
 
   async function handleSaveAndShare() {
+    isSaving = true;
+
     // ローカルストレージに保存
     localStorage.setItem('profileData', JSON.stringify($profileData));
 
@@ -57,15 +61,15 @@
     if (blob) {
       await handleWebShare(blob);
     }
+
+    isSaving = false;
   }
 </script>
 
 <div class="flex flex-col xl:flex-row items-center justify-center">
-  <InputForm on:updateProfile={handleProfileUpdate} />
+  <InputForm />
   <Canvas
     bind:exportImage={exportImage}
-    {...($profileData ?? {})}
-    headerImage={$profileData.headerImage ?? undefined}
   />
 </div>
 <div class="flex items-center justify-center">
@@ -75,3 +79,7 @@
     <button class="mt-4 p-2 bg-blue-500 text-white rounded" on:click={handleSaveAndShare}>Save & Share!</button>
   {/if}
 </div>
+
+{#if isSaving}
+  <Spinner text="Saving Data..." />
+{/if}
