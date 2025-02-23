@@ -42,14 +42,17 @@
   }
 </script>
 
-<Navbar>
+<Navbar class="bg-base text-accent">
   <NavBrand href="/">
     <span class="text-xl font-semibold">HuntersAt</span>
   </NavBrand>
   <NavHamburger />
-  <NavUl>
-    <NavLi class="cursor-pointer" on:click={() => loginModal = true}>Log-in</NavLi>
-    <NavLi class="cursor-pointer" on:click={() => aboutModal = true}>About</NavLi>
+  <NavUl class="">
+    {#if $myDid}
+      <NavLi class="cursor-pointer text-accent" on:click={() => loginModal = true}>Log-out</NavLi>
+    {:else}
+      <NavLi class="cursor-pointer text-accent" on:click={() => loginModal = true}>Log-in with Bluesky</NavLi>
+    {/if}
   </NavUl>
 </Navbar>
 
