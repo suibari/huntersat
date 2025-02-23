@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { weapons } from '$lib/consts';
+    import type Konva from 'konva';
   import { onMount, tick } from "svelte";
   import { Stage, Layer, Rect, Text, Image, Star, Line } from 'svelte-konva';
 
@@ -16,6 +17,7 @@
 
   let background: HTMLImageElement;
   let header: HTMLImageElement;
+  let stageRef: any;
   let rectRef: any;
   let canvasWidth = 900;
   let canvasHeight = 1200;
@@ -32,6 +34,8 @@
 
     updateScale();
     window.addEventListener("resize", updateScale);
+
+    updateColor(backgroundColor);
   });
 
   $: {
@@ -72,6 +76,19 @@
     }
   }
 
+  /**
+   * Canvas画像変換
+   */
+  export async function exportImage(): Promise<Blob|undefined> {
+    if (stageRef) {
+      const dataUrl = await stageRef.handle().toBlob({
+        mimeType: "image/png",
+        pixelRatio: 2
+      });
+      return dataUrl as Blob;
+    }
+  }
+
   const configRect = (x_base: number, x_offset: number, y_base:number, y_offset: number) => {
     return {
       x: x_base + x_offset,
@@ -82,6 +99,11 @@
       strokeWidth: 8,
     }
   }
+
+  function getDate() {
+    const now = new Date();
+    return `${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()}`;
+  }
 </script>
 
 <div
@@ -90,6 +112,7 @@
   style="transform: scale({canvasScale}); height: {canvasHeight}px;"
 >
   <Stage
+    bind:this={stageRef}
     width={900}
     height={1200}
   >
@@ -144,6 +167,13 @@
         width={820}
         text={comment}
         fontSize={16}
+        fill='black'
+      />
+      <Text
+        x={20}
+        y={1150}
+        text={getDate()}
+        fontSize={40}
         fill='black'
       />
     </Layer>

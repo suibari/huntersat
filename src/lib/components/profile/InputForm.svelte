@@ -83,7 +83,11 @@
     const r = Math.floor(Math.random() * 128 + 128);
     const g = Math.floor(Math.random() * 128 + 128);
     const b = Math.floor(Math.random() * 128 + 128);
-    return `rgb(${r}, ${g}, ${b})`;
+
+    // 各成分を16進数に変換し、ゼロ埋めで2桁にする
+    const toHex = (c: number) => c.toString(16).padStart(2, "0");
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   }
 </script>
 
