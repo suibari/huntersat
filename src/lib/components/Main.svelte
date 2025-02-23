@@ -19,7 +19,7 @@
   }
 </script>
 
-<div class="flex flex-col md:flex-row items-center justify-center">
+<div class="flex flex-col xl:flex-row items-center justify-center">
   <InputForm on:updateProfile={handleProfileUpdate} />
   <Canvas {...profileData} />
 </div>

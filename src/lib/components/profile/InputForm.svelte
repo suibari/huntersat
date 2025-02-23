@@ -87,7 +87,7 @@
   }
 </script>
 
-<div class="m-2 p-4 bg-gray-100 rounded-lg">
+<div class="m-2 p-4 bg-gray-100 rounded-lg w-auto">
   <p class="font-semibold">ハンターネーム:</p>
   <input bind:value={hunterName} on:input={update} class="border w-full p-1 bg-white" />
 
