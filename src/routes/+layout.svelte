@@ -7,6 +7,7 @@
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
   import Login from '$lib/components/modal/Login.svelte';
   import { uint8ArrayToDataURL } from '$lib/util';
+  import Footer from '$lib/components/Footer.svelte';
   
   let loginModal = $state(false);
   let isLoggingOut = $state(false);
@@ -108,6 +109,8 @@
 <div class="p-2">
   {@render children()}
 </div>
+
+<Footer/>
 
 <Login bind:loginModal={loginModal} />
 
