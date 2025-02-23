@@ -19,11 +19,12 @@
   let header: HTMLImageElement;
   let stageRef: any;
   let rectRef: any;
+  let lineRef: any;
   let canvasWidth = 900;
   let canvasHeight = 1200;
   let canvasScale = 1;
 
-  const configLine = [48 + (32 * playTimeRange[0]), 764, 50 + (33.5 * playTimeRange[1]), 764];
+  const configLine = [48 + (33.5 * playTimeRange[0]), 764, 50 + (33.5 * playTimeRange[1]), 764];
 
   onMount(() => {
     const bg = document.createElement('img');
@@ -39,7 +40,7 @@
   });
 
   $: {
-    if (window && headerImage && backgroundColor) {
+    if (window && headerImage) {
       const hd = document.createElement('img');
       hd.src = headerImage;
       hd.onload = () => {
@@ -62,6 +63,22 @@
 
   // colorが変わったら反映
   $: updateColor(backgroundColor);
+
+  /**
+   * プレイ時間変更
+   * @param playtime
+   */
+  async function updatePlaytime(playtime: number[]) {
+    let configLine = [48 + (33.5 * playtime[0]), 764, 50 + (33.5 * playtime[1]), 764];
+
+    await tick();
+    if (lineRef?.handle) {
+      lineRef.handle.points(configLine)
+      lineRef.handle.getLayer()?.batchDraw(); // 変更を描画
+    }
+  }
+
+  $: updatePlaytime(playTimeRange);
 
   /**
    * Scale変更
@@ -219,6 +236,7 @@
 
       <!-- プレイ時間 -->
       <Line
+        bind:this={lineRef}
         points={configLine}
         stroke="blue"
         strokeWidth={10}

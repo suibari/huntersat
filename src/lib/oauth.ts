@@ -3,6 +3,7 @@ import { browser } from '$app/environment';
 import { BrowserOAuthClient, OAuthSession } from '@atproto/oauth-client-browser';
 import { openDB } from 'idb';
 import { Agent } from '@atproto/api';
+import { REVIEWOPEN } from '@atproto/api/dist/client/types/tools/ozone/moderation/defs';
 
 const url = PUBLIC_URL || `http://127.0.0.1:5173`;
 const enc = encodeURIComponent;
@@ -51,6 +52,7 @@ class OAuthManager {
         console.log(`[INFO] OAuth client initialized`);
       }
     } catch (error) {
+      await this.client.init();
       console.error("OAuth client initialization failed:", error);
     }
   }
