@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { weapons } from '$lib/consts';
-    import type Konva from 'konva';
   import { onMount, tick } from "svelte";
   import { Stage, Layer, Rect, Text, Image, Star, Line } from 'svelte-konva';
 
@@ -12,7 +11,7 @@
   export let selectedWeapons: Record<string, number> = {};
   export let playTimeRange = [18, 23];
   export let comment = "";
-  export let headerImage: string;
+  export let headerImage: string | undefined;
   export let backgroundColor: string;
 
   let background: HTMLImageElement;

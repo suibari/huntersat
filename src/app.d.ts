@@ -1,3 +1,5 @@
+import { ValidationResult, BlobRef } from '@atproto/lexicon'
+
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
@@ -16,21 +18,21 @@ declare global {
 			selectedWeapons: Record<string, number>;
 			playTimeRange: number[];
 			comment: string;
-			headerImage: string;
+			headerImage?: string;
 			backgroundColor: string;
 		};
 
 		// Generated Code From Lexicon
 		export interface Record {
-			hunterName?: string
-			hunterID?: string
-			hunterRank?: string
-			selectedPlatforms?: string[]
-			selectedWeapons?: Weapon
-			playTimeRange?: number[]
-			comment?: string
+			hunterName: string
+			hunterID: string
+			hunterRank: string
+			selectedPlatforms: string[]
+			selectedWeapons: Weapon
+			playTimeRange: number[]
+			comment: string
 			headerImage?: BlobRef
-			backgroundColor?: string
+			backgroundColor: string
 			createdAt: string
 			[k: string]: unknown
 		}

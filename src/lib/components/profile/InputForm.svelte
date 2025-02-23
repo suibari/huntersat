@@ -1,6 +1,5 @@
 <script lang="ts">
   import { platforms, platformsName, weapons, weaponsName } from "$lib/consts";
-    import { AppBskyActorDefs } from "@atproto/api";
   import { createEventDispatcher, onMount } from "svelte";
 
   export let hunterName = "";

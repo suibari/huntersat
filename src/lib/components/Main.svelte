@@ -12,22 +12,38 @@
   }
 
   async function handleSaveAndPost() {
-    // バイナリ変換
-    const blob = await exportImage();
+    let record: App.Record;
 
-    // User Repoに保存
     const agent = oauthManager.currentAgent;
-    const record: App.Record = {
-      ...$profileData,
-      createdAt: new Date().toISOString(),
+
+    try {
+      // headerImageはdataURLなので除外する必要がある
+      const { headerImage, ...rest } = $profileData;
+      record = {
+        ...rest,
+        createdAt: new Date().toISOString(),
+      }
+
+      if ($profileData.headerImage) {
+        // headerImage(dataURL)をBlobに変換し, uploadBlob
+        const blob = await (await fetch($profileData.headerImage)).blob();
+        const response = await agent?.com.atproto.repo.uploadBlob(blob);
+        const blobRef = response?.data?.blob;
+
+        record.headerImage = blobRef;
+      }
+
+      // purRecord
+      await agent?.com.atproto.repo.putRecord({
+        collection: "blue.huntersat.profile",
+        repo: $myDid!,
+        record,
+        rkey: "self",
+      });
+      console.log(`[INFO] successful putRecord`);
+    } catch (error) {
+      console.error(`[ERROR] uploadBlob or putRecord error: ${error}`);
     }
-    const response = await agent?.com.atproto.repo.putRecord({
-      collection: "blue.huntersat.profile",
-      repo: $myDid!,
-      record,
-      rkey: "self",
-    });
-    console.log(`[INFO] successful putRecord`);
   }
 
   async function handleSaveAndShare() {
@@ -46,7 +62,11 @@
 
 <div class="flex flex-col xl:flex-row items-center justify-center">
   <InputForm on:updateProfile={handleProfileUpdate} />
-  <Canvas bind:exportImage={exportImage} {...$profileData} />
+  <Canvas
+    bind:exportImage={exportImage}
+    {...($profileData ?? {})}
+    headerImage={$profileData.headerImage ?? undefined}
+  />
 </div>
 <div class="flex items-center justify-center">
   {#if $myDid}

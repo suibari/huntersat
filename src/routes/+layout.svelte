@@ -6,6 +6,7 @@
   import { myDid, isLoading, profileData } from '$lib/stores';
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
   import Login from '$lib/components/modal/Login.svelte';
+    import { uint8ArrayToDataURL } from '$lib/util';
   
   let loginModal = $state(false);
   let isLoggingOut = $state(false);
@@ -36,7 +37,16 @@
         repo: $myDid,
         rkey: 'self',
       });
-      tmpProfileData = data.value as App.ProfileData;
+      const { ...record } = data.value as App.Record;
+
+      // BlobをdataURLに戻す
+      const response = await agent.com.atproto.sync.getBlob({did: $myDid, cid: record.headerImage?.ref});
+
+      // 整形
+      tmpProfileData = {
+        ...record,
+        headerImage: await uint8ArrayToDataURL(response.data) ?? undefined,
+      }
     } else {
       // 未ログインなら、ローカルストレージからデータ取得
       const data = localStorage.getItem('profileData');
@@ -52,7 +62,6 @@
           selectedWeapons: {},
           playTimeRange: [8, 22],
           comment: "",
-          headerImage: "",
           backgroundColor: "",
         };
       }
