@@ -11,3 +11,15 @@ export const blobToDataURL = (blob: Blob): Promise<string> => {
     reader.readAsDataURL(blob);
   });
 }
+
+export function getRandomColor() {
+  // ランダムなパステルカラーを生成
+  const r = Math.floor(Math.random() * 128 + 128);
+  const g = Math.floor(Math.random() * 128 + 128);
+  const b = Math.floor(Math.random() * 128 + 128);
+
+  // 各成分を16進数に変換し、ゼロ埋めで2桁にする
+  const toHex = (c: number) => c.toString(16).padStart(2, "0");
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}

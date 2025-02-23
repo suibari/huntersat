@@ -1,6 +1,7 @@
 <script lang="ts">
   import { platforms, platformsName, weapons, weaponsName } from "$lib/consts";
   import { profileData } from "$lib/stores";
+  import { getRandomColor } from "$lib/util";
   import { onMount } from "svelte";
 
   let hunterName = "";
@@ -12,13 +13,6 @@
   let comment = "";
   let headerImage: string | undefined = undefined;
   let backgroundColor: string = "";
-
-  onMount(() => {
-    if (!backgroundColor) {
-      backgroundColor = getRandomColor();
-      update();
-    }
-  })
 
   function toggleWeapon(weapon: string, level: number) {
     selectedWeapons = { ...selectedWeapons, [weapon]: selectedWeapons[weapon] === level ? 0 : level };
@@ -76,18 +70,6 @@
     ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
     headerImage = canvas.toDataURL("image/png");
     update();
-  }
-
-  function getRandomColor() {
-    // ランダムなパステルカラーを生成
-    const r = Math.floor(Math.random() * 128 + 128);
-    const g = Math.floor(Math.random() * 128 + 128);
-    const b = Math.floor(Math.random() * 128 + 128);
-
-    // 各成分を16進数に変換し、ゼロ埋めで2桁にする
-    const toHex = (c: number) => c.toString(16).padStart(2, "0");
-
-    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
   }
 
   $: {

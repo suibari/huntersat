@@ -5,7 +5,7 @@
 
 <footer class="bg-base text-accent p-4">
   <div class="container mx-auto flex justify-between items-center">
-    <p class="text-sm">&copy; 2025 DrawAt</p>
+    <p class="text-sm">&copy; 2025 HuntersAt</p>
     <div class="flex gap-4">
       <a 
         href="https://bsky.app/profile/suibari.com" 

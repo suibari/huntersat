@@ -6,7 +6,7 @@
   import { myDid, isLoading, profileData } from '$lib/stores';
   import { Navbar, NavBrand, NavLi, NavUl, NavHamburger } from 'flowbite-svelte';
   import Login from '$lib/components/modal/Login.svelte';
-  import { uint8ArrayToDataURL } from '$lib/util';
+  import { getRandomColor, uint8ArrayToDataURL } from '$lib/util';
   import Footer from '$lib/components/Footer.svelte';
   
   let loginModal = $state(false);
@@ -63,7 +63,7 @@
           selectedWeapons: {},
           playTimeRange: [8, 22],
           comment: "",
-          backgroundColor: "",
+          backgroundColor: getRandomColor(),
         };
       }
     }
