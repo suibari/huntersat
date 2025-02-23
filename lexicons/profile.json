@@ -1,0 +1,49 @@
+{
+  "lexicon": 1,
+  "id": "blue.huntersat.profile",
+  "defs": {
+    "main": {
+      "type": "record",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "properties": {
+          "hunterName": { "type": "string" },
+          "hunterID": { "type": "string" },
+          "hunterRank": { "type": "string" },
+          "selectedPlatforms": { "type": "array", "items": { "type": "string" } },
+          "selectedWeapons": {
+            "type": "ref",
+            "ref": "#weapon"
+          },
+          "playTimeRange": { "type": "array", "items": { "type": "integer" } },
+          "comment": { "type": "string", "maxLength": 2048 },
+          "headerImage": { "type": "blob", "accept": ["image/png"] },
+          "backgroundColor": { "type": "string" },
+          "createdAt": { "type": "string", "format": "datetime" }
+        },
+        "required": ["createdAt"]
+      }
+    },
+    "weapon": {
+      "type": "object",
+      "properties": {
+        "gs": { "type": "integer" },
+        "ls": { "type": "integer" },
+        "sns": { "type": "integer" },
+        "db": { "type": "integer" },
+        "hammer": { "type": "integer" },
+        "hh": { "type": "integer" },
+        "lance": { "type": "integer" },
+        "gl": { "type": "integer" },
+        "sa": { "type": "integer" },
+        "cb": { "type": "integer" },
+        "ig": { "type": "integer" },
+        "lbg": { "type": "integer" },
+        "hbg": { "type": "integer" },
+        "bow": { "type": "integer" }
+      },
+      "required": []
+    }
+  }
+}
