@@ -3,7 +3,7 @@
   // ------------------------
   export const handleWebShare = async (blob: Blob) => {
     const shareUrl = `https://huntersat.suibari.com/`
-    const shareTextBase = "私のハンターズプロフィールだよ! 一狩り行こうぜ!";
+    const shareTextBase = "私のハンターズプロフィールだよ。一狩り行こうぜ! #MHWs";
     const shareText = `${shareTextBase} ${shareUrl}`;
 
     if (navigator.share) {

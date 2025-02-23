@@ -5,9 +5,13 @@
   import { handleWebShare } from "$lib/webshare";
   import { oauthManager } from "$lib/oauth";
   import Spinner from "./Spinner.svelte";
+  import Post from "./modal/Post.svelte";
+  import { BlobRef } from '@atproto/lexicon'
 
   let exportImage: (() => Promise<Blob | undefined>);
   let isSaving = false;
+  let blobRef: BlobRef;
+  let postModal = false;
 
   async function handleSaveAndPost() {
     let record: App.Record;
@@ -41,8 +45,17 @@
         rkey: "self",
       });
       console.log(`[INFO] successful putRecord`);
+
+      // CanvasをuploadBlob
+      const blob = await exportImage();
+      const response = await agent?.com.atproto.repo.uploadBlob(blob);
+      if (response?.success && response.data.blob) {
+        blobRef = response?.data.blob;
+      }
+
+      postModal = true;
     } catch (error) {
-      console.error(`[ERROR] uploadBlob or putRecord error: ${error}`);
+      console.error(`[ERROR] uploadBlob/putRecord/post error: ${error}`);
     } finally {
       isSaving = false;
     }
@@ -79,6 +92,10 @@
     <button class="mt-4 p-2 bg-blue-500 text-white rounded" on:click={handleSaveAndShare}>Save & Share!</button>
   {/if}
 </div>
+
+{#if postModal && blobRef}
+  <Post {postModal} {blobRef} />    
+{/if}
 
 {#if isSaving}
   <Spinner text="Saving Data..." />
