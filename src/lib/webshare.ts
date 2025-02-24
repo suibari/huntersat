@@ -1,11 +1,7 @@
 // ------------------------
 // web share API
 // ------------------------
-export const handleWebShare = async (blob: Blob) => {
-  const shareUrl = `https://huntersat.suibari.com/`
-  const shareTextBase = "ギルドカードを作ったよ。ひと狩り行こうぜ! #MHWs #MHWilds";
-  const shareText = `${shareTextBase} ${shareUrl}`;
-
+export const handleWebShare = async (blob: Blob, text: string) => {
   if (navigator.share) {
     // Web Share API をサポートしている場合
     try {
@@ -14,7 +10,7 @@ export const handleWebShare = async (blob: Blob) => {
       await navigator.share({
         title: "Hunters Profile",
         files: [file],
-        text: shareText,
+        text,
         // url: shareUrl, // URLが優先され、textが無視されることが多い
       });
     } catch (err) {
@@ -22,7 +18,7 @@ export const handleWebShare = async (blob: Blob) => {
     }
   } else {
     // フォールバック：Bluesky共有画面を新しいタブで開く
-    const intentUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(shareText)}`;
+    const intentUrl = `https://bsky.app/intent/compose?text=${encodeURIComponent(text)}`;
     window.open(intentUrl, "_blank");
   }
 };

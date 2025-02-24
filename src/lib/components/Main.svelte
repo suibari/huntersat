@@ -71,12 +71,8 @@
     localStorage.setItem('profileData', JSON.stringify($profileData));
 
     // バイナリ変換
-    const blob = await exportImage();
-
-    // Web Share API
-    if (blob) {
-      await handleWebShare(blob);
-    }
+    imageBlob = await exportImage();
+    postModal = true;
 
     isSaving = false;
   }
@@ -96,7 +92,7 @@
   {/if}
 </div>
 
-{#if postModal && imageBlob && blobRef}
+{#if postModal && imageBlob}
   <Post bind:postModal={postModal} {imageBlob} {blobRef} />    
 {/if}
 

@@ -2,6 +2,7 @@
   import { oauthManager } from "$lib/oauth";
   import { myDid } from "$lib/stores";
   import { blobToDataURL } from "$lib/util";
+  import { handleWebShare } from "$lib/webshare";
   import { RichText } from "@atproto/api";
   import { BlobRef } from '@atproto/lexicon'
   import { Modal } from "flowbite-svelte";
@@ -24,6 +25,7 @@
 
     // post
     if (blobRef) {
+      // ログイン時
       const text = textPost;
       const richText = new RichText({text});
       await richText.detectFacets(agent);
@@ -47,6 +49,9 @@
         createdAt: new Date().toISOString(),
       });
       console.log(`[INFO] successful post with image`);
+    } else {
+      // 未ログイン時
+      await handleWebShare(imageBlob, textPost);
     }
   }
 </script>
@@ -57,8 +62,13 @@
     <textarea class="w-full" bind:value={textPost}></textarea>
     <button 
       onclick={handlePost}
-      class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
-      Post
+      class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+    >
+      {#if blobRef}
+        Post
+      {:else}
+        Share
+      {/if}
     </button>
   </div>
 </Modal>
