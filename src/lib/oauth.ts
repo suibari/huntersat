@@ -41,7 +41,7 @@ class OAuthManager {
 
     try {
       const row = await this.getFromIndexedDB();
-      if (row?.expiresAt && row?.did) {
+      if (row?.did) {
         this.session = await this.client.restore(row.did, false);
         this.agent = new Agent(this.session);
         console.log(`[INFO] OAuth client refleshed`);
@@ -111,7 +111,7 @@ class OAuthManager {
     };
 
     const handle = localStorage.getItem('handle');
-    const state = localStorage.getItem('oauth_state');
+    // const state = localStorage.getItem('oauth_state');
 
     try {
       const db = await openDB('@atproto-oauth-client', 1);
@@ -121,14 +121,15 @@ class OAuthManager {
       if (handle) {
         const row = await storeDid.get(handle);
         result.did = row.value;
+        result.expiresAt = row.expireAt;
       }
 
       // state expireAt
-      const storeState = db.transaction('state', 'readonly').objectStore('state');
-      if (state) {
-        const row = await storeState.get(state);
-        result.expiresAt = row.expiresAt;
-      }
+      // const storeState = db.transaction('state', 'readonly').objectStore('state');
+      // if (state) {
+      //   const row = await storeState.get(state);
+      //   result.expiresAt = row.expiresAt;
+      // }
 
       return result;
     } catch (error) {
