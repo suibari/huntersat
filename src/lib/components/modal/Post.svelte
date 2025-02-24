@@ -11,7 +11,7 @@
   export let imageBlob: Blob;
   export let blobRef: BlobRef;
 
-  let textPost = "私のハンターズプロフィールだよ。一狩り行こうぜ! #MHWs\nhttps://huntersat.suibari.com/";
+  let textPost = "ギルドカードを作ったよ。ひと狩り行こうぜ! #MHWs #MHWilds\nhttps://huntersat.suibari.com/";
 
   let dataURL: string;
 
