@@ -94,7 +94,7 @@
 
 <Navbar class="bg-base text-accent">
   <NavBrand href="/">
-    <span class="text-xl font-semibold">HuntersAt</span>
+    <span class="rocknroll-one-regular text-xl font-semibold">HuntersAt</span>
   </NavBrand>
   <NavHamburger />
   <NavUl class="">

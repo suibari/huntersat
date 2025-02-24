@@ -151,6 +151,7 @@
         text={$profileData.hunterName}
         fontSize={50}
         fill='white'
+        fontFamily="RocknRoll One"
       />
       <Text
         x={20}
@@ -158,6 +159,7 @@
         text="Hunter-ID: {$profileData.hunterID}"
         fontSize={25}
         fill='white'
+        fontFamily="RocknRoll One"
       />
       <Text
         x={170}
@@ -166,6 +168,7 @@
         fontSize={40}
         fill='black'
         align='center'
+        fontFamily="Noto Sans JP"
       />
       <Text
         x={40}
@@ -173,15 +176,17 @@
         lineHeight={1.5}
         width={820}
         text={$profileData.comment}
-        fontSize={16}
+        fontSize={20}
         fill='black'
+        fontFamily="Noto Sans JP"
       />
       <Text
         x={20}
         y={1150}
         text={getDate()}
-        fontSize={40}
+        fontSize={38}
         fill='black'
+        fontFamily="RocknRoll One"
       />
     </Layer>
 
