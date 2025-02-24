@@ -46,13 +46,13 @@ class OAuthManager {
         this.agent = new Agent(this.session);
         console.log(`[INFO] OAuth client refleshed`);
       } else {
-        // 未ログイン
+        // 未ログイン、コールバック中
         await this.client.init();
         console.log(`[INFO] OAuth client initialized`);
       }
     } catch (error) {
       await this.client.init();
-      console.error("OAuth client initialization failed:", error);
+      console.error("[ERROR] OAuth client initialization failed:", error);
     }
   }
 
@@ -63,13 +63,14 @@ class OAuthManager {
 
     try {
       localStorage.setItem('provider', pbd);
+      localStorage.setItem('handle', handle);
       await this.init(pbd);
       if (this.client) {
         const authUrl = await this.client.signIn(handle, { prompt: 'login', ui_locales: 'ja-JP' });
         window.location.href = authUrl;
       }
     } catch (error) {
-      console.error(`failed to log-in: ${error}`);
+      console.error(`[ERROR] failed to log-in: ${error}`);
     }
   }
 
@@ -82,7 +83,7 @@ class OAuthManager {
       // 外部DBを使う場合ここでdelete
       console.log(`[INFO] successful log-out`);
     } catch (error) {
-      console.error(`failed to log-out: ${error}`);
+      console.error(`[ERROR] failed to log-out: ${error}`);
     }
   }
 
@@ -97,7 +98,9 @@ class OAuthManager {
     if (row) {
       const { expiresAt, did } = row;
       if (did && this.client) {
-        this.session = await this.client.restore(did);
+        const result = await this.client.init();
+        this.session = result?.session!;
+        console.log(`[INFO] finished callback`)
 
         // 外部DBを使う場合ここでinsert
       }
@@ -133,7 +136,7 @@ class OAuthManager {
 
       return result;
     } catch (error) {
-      console.error('Failed to retrieve DID from IndexedDB:', error);
+      console.error('[ERROR] Failed to retrieve DID from IndexedDB:', error);
       return null;
     }
   }

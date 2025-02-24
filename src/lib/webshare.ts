@@ -18,7 +18,7 @@ export const handleWebShare = async (blob: Blob) => {
         // url: shareUrl, // URLが優先され、textが無視されることが多い
       });
     } catch (err) {
-      console.error("Sharing failed:", err);
+      console.error("[ERROR] Sharing failed:", err);
     }
   } else {
     // フォールバック：Bluesky共有画面を新しいタブで開く

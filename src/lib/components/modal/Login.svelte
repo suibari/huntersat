@@ -1,15 +1,19 @@
 <script lang="ts">
   import { oauthManager } from '$lib/oauth';
   import { Modal } from 'flowbite-svelte';
+    import Spinner from '../Spinner.svelte';
 
   export let loginModal = false;
 
   let provider = 'https://bsky.social';
   let handle = '';
+  let isRedirecting = false;
 
   async function handleLogin() {
     if (provider && handle) {
+      isRedirecting = true;
       await oauthManager.login(provider, handle);
+      isRedirecting = false;
     }
   }
 </script>
@@ -36,3 +40,7 @@
     Login
   </button>
 </Modal>
+
+{#if isRedirecting}
+  <Spinner text="Redirecting..." />
+{/if}
